@@ -1,0 +1,66 @@
+﻿@model IEnumerable<ModelEF.Model.Product>
+
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section header{
+    <i class="fa fa-apple"></i>&nbsp; Chi Tiết Sản Phẩm
+}
+
+@using (Html.BeginForm("Index", "Product", FormMethod.Post))
+{
+    <div class="col-lg-12 form-group">
+        <div class="col-md-6" style="padding-left:0px;">
+            <a href="@Url.Action("Index","Product")" class="btn btn-danger">Quay Lại</a>
+        </div>
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-2">
+        </div>
+    </div>
+}
+<div class="col-lg-12 form-group">
+    <table class="table table-bordered">
+        <tr>
+            <th style="width: 100px; text-align: center !important;">
+                Sản Phẩm
+            </th>
+            <th style="width: 100px; text-align: center !important;">
+                Giá
+            </th>
+            <th style="width: 80px; text-align: center !important;">
+                Kích Cỡ
+            </th>
+            <th style="width: 100px; text-align: center !important;">
+                Hình Ảnh
+            </th>
+            <th style="text-align: center !important;">
+                Mô Tả
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.product_name
+                </td>
+                <td>
+                    @string.Format("{0:0,0.}", @item.product_unicost) &nbsp;VND
+                </td>
+                <td>
+                    @item.product_size
+                </td>
+                <td>
+                    <img style="width:50px;height:50px" src="~/Upload/sanpham/@item.product_image" />
+                </td>
+                <td>
+                    @item.product_des
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

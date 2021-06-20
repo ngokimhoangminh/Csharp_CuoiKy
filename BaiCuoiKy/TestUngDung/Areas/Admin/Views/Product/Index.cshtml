@@ -1,0 +1,136 @@
+﻿@model List<ModelEF.ViewModel.ProductModel>
+
+@{
+    ViewBag.Title = "Quản Lý Sản Phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section header{
+    <i class="fa fa-apple"></i>&nbsp; Quản Lý Sản Phẩm
+}
+
+@using (Html.BeginForm("Index", "Product", FormMethod.Post))
+{
+    <div class="col-lg-12 form-group row pt-3" style="padding-left:32px;">
+        <div class="col-md-6" style="padding-left:0px;">
+            @Html.ActionLink("Tạo mới", "Create", "Product", new { @class = "btn btn-danger" })
+        </div>
+        <div class="col-md-4">
+            <input type="text" value="@ViewBag.searchString" name="searchString" placeholder="Nhập từ khóa tìm kiếm" class="form-control" style="cursor:pointer" />
+        </div>
+        <div class="col-md-2">
+            <input type="submit" vaule="Tìm kiếm" class="btn btn-default" style="background: darkblue; color: aliceblue; outline: auto;" />
+        </div>
+    </div>
+}
+<div class="col-lg-12 form-group">
+    <table class="table table-bordered" id="myTable">
+        <thead>
+            <tr style=" background: brown; font-family: initial;font-size: 13px;">
+                <th style="color: #fff;">
+                    STT
+                </th>
+                <th style="text-align: center!important; color: #fff;">
+                    Danh Mục
+                </th>
+                <th style="text-align:center!important; color: #fff;">
+                    Sản Phẩm
+                </th>
+                <th style="width: 75px; text-align: center !important; color: #fff;">
+                    Đơn Giá
+                </th>
+                <th style="text-align:center!important; color: #fff;">
+                    Số Lượng
+                <th style="text-align: center!important; color: #fff;">
+                    Trạng Thái
+                </th>
+                <th style="width: 100px;text-align:center!important; color: #fff;" >
+                Hành Động
+                </th>
+                <th style="text-align: center!important;color: #fff;">
+                    Xem Chi Tiết
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ var i = 1;}
+            @foreach (var item in Model)
+            {
+                <tr id="row_@item.product_id">
+                    <td>
+                        @i
+                    </td>
+                    <td>
+                        @item.category_name
+                    </td>
+                    <td>
+                        @item.product_name
+                    </td>
+                    <td>
+                        @string.Format("{0:0,0.}", @item.product_unicost) &nbsp;VND
+                    </td>
+                    <td>
+                        @item.product_quantity
+                    </td>
+                    @if (@item.product_status == 1)
+                    {
+                        <td>
+                            Hiển Thị
+                        </td>
+                    }
+                    @if (@item.product_status == 0)
+                    {
+                        <td>
+                            Ẩn
+                        </td>
+                    }
+                    <td>
+                        <a href="@Url.Action("Edit", "Product", new { id = @item.product_id })" class="btn btn-primary" style="font-size:12px;"><i class="fa fa-edit"></i></a>
+                        <a onclick="PopupDelete(@item.product_id)" class="btn btn-danger" style="cursor:pointer; font-size:12px;"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                    <td style="text-align:center;">
+                        <a href="@Url.Action("Detail", "Product", new { id = @item.product_id })" class="btn btn-primary" style="font-size:12px;"><i class="fa fa-eye-slash"></i></a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Index","Product")"><i class="fa fa-refresh"></i></a>
+                    </td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+   
+</div>
+<script>
+    function PopupDelete(id) {
+        Swal.fire({
+            title: 'Bạn có chắc chắn xóa sản phẩm này không',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Product/Delete",
+                    data: { id: id },
+                    success: function (result) {
+                        Swal.fire(
+                            'Thành Công!',
+                            'Bạn đã xóa thành công',
+                            'success'
+                        );
+                        $("#row_" + id).remove();
+
+                    }
+                })
+
+            }
+        })
+    }
+</script>

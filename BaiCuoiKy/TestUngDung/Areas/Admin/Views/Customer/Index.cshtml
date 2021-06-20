@@ -1,0 +1,80 @@
+﻿@using PagedList
+@using PagedList.Mvc
+@model PagedList.IPagedList<ModelEF.Model.Customer>
+
+@{
+    ViewBag.Title = "Quản Lý Khách Hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@section header{
+    <i class="fa fa-user-md"></i>&nbsp; Quản Lý Khách Hàng
+}
+
+@using (Html.BeginForm("Index", "Customer", FormMethod.Post))
+{
+    <div class="col-lg-12 form-group">
+        <div class="col-md-6" style="padding-left:0px;">
+            <a href="@Url.Action("Index","Customer")" class="btn btn-danger pl-0">Quay Lại</a>
+        </div>
+        <div class="col-md-4">
+            <input type="text" value="@ViewBag.searchString" name="searchString" placeholder="Nhập từ khóa tìm kiếm" class="form-control" style="cursor:pointer" />
+        </div>
+        <div class="col-md-2">
+            <input type="submit" vaule="Tìm kiếm" class="btn btn-default" style="background: darkblue; color: aliceblue; outline: auto;"/>
+        </div>
+    </div>
+}
+<div class="col-lg-12 form-group">
+    <table class="table table-bordered">
+        <tr style=" background: brown; color: #fff;font-family: initial;font-size: 13px;">
+            <th>
+                STT
+            </th>
+            <th>
+                Tên Khách Hàng
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Địa Chỉ
+            </th>
+            <th>
+                Mật Khẩu
+            </th>
+            <th>
+                Số Điện Thoại
+            </th>
+            <th></th>
+        </tr>
+        @{ var i = 1;}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@i</td>
+                <td>
+                    @item.customer_name
+                </td>
+                <td>
+                    @item.customer_email
+                </td>
+                <td>
+                    @item.customer_address
+                </td>
+                <td>
+                    @item.customer_password
+                </td>
+                <td>
+                    @item.customer_phone
+                </td>
+                <td>
+                    <a href="@Url.Action("Index","Customer")"><i class="fa fa-refresh"></i></a>
+                </td>
+            </tr>
+            i++;
+        }
+
+    </table>
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.searchString }))
+</div>
